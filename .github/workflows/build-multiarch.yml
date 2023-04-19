@@ -21,6 +21,7 @@ jobs:
           - java19
           - java17
           - java17-graalvm-ce
+          - java17-graalvm-ee
           - java17-jdk
           - java17-openj9
           - java17-alpine
@@ -46,6 +47,10 @@ jobs:
             mcVersion: 1.18.2
           - variant: java17-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:ol8-java17
+            platforms: linux/amd64,linux/arm64
+            mcVersion: 1.18.2
+          - variant: java17-graalvm-ee
+            baseImage: container-registry.oracle.com/graalvm/jdk-ee:ol9-java17
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.18.2
           - variant: java17-jdk
@@ -151,8 +156,6 @@ jobs:
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
-          MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
-          CF_API_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
         run: |
           tests/test.sh
 
