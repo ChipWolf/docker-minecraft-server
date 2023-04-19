@@ -146,7 +146,6 @@ jobs:
           password: ${{ secrets.ORACLE_PASSWORD }}
 
       - name: Build for test
-        if: ${{ !contains(matrix.baseImage, 'oracle.com') }}
         uses: docker/build-push-action@v3.3.0
         with:
           platforms: linux/amd64
@@ -162,7 +161,6 @@ jobs:
           # no cache-to to avoid cross-cache update from next build step
 
       - name: Run tests
-        if: ${{ !contains(matrix.baseImage, 'oracle.com') }}
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
