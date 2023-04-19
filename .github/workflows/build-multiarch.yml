@@ -146,6 +146,7 @@ jobs:
           password: ${{ secrets.ORACLE_PASSWORD }}
 
       - name: Build for test
+        if: ${{ !contains(matrix.baseImage, 'oracle.com') }}
         uses: docker/build-push-action@v3.3.0
         with:
           platforms: linux/amd64
