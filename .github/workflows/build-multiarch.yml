@@ -118,7 +118,6 @@ jobs:
           # then the use of ${{ github.repository_owner }} will need to be replaced.
           images: |
             ${{ secrets.DOCKER_USER }}/minecraft-server
-            ghcr.io/chipwolf/minecraft-server
           tags: |
             type=ref,event=tag,enable=${{ matrix.variant == 'java17' && github.ref_name == 'master' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
