@@ -161,6 +161,7 @@ jobs:
           # no cache-to to avoid cross-cache update from next build step
 
       - name: Run tests
+        if: ${{ !contains(matrix.baseImage, 'oracle.com') }}
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
