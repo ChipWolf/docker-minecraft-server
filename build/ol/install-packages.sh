@@ -35,7 +35,7 @@ dnf install -y ImageMagick \
   unzip \
   zstd \
   lbzip2 \
-  libpcap
+  libpcap \
   which \
   xargs
 
