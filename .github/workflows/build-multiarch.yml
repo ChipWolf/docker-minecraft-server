@@ -146,6 +146,7 @@ jobs:
 
       - name: Build for test
         uses: docker/build-push-action@v3.3.0
+        if: ${{ !contains(matrix.baseImage, 'oracle.com') }}
         with:
           platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
@@ -160,6 +161,7 @@ jobs:
           # no cache-to to avoid cross-cache update from next build step
 
       - name: Run tests
+        if: ${{ !contains(matrix.baseImage, 'oracle.com') }}
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
