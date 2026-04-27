@@ -5,3 +5,5 @@
 /gh-md-toc
 personal-build-and-develop.*
 site/
+
+.tmp-commit-msg.txt

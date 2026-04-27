@@ -170,7 +170,36 @@ function handleGenericPacks() {
     packFiles=()
     for packEntry in "${packs[@]}"; do
       pack="${GENERIC_PACKS_PREFIX}${packEntry}${GENERIC_PACKS_SUFFIX}"
-      if isURL "${pack}"; then
+      if isOCIRef "${pack}"; then
+        ref="${pack#oci://}"
+        # All OCI refs share one staging dir so layers common to multiple
+        # sibling artifacts (the whole point of layered distribution) are
+        # downloaded exactly once across all of GENERIC_PACKS.
+        stage="/data/packs/oci"
+        mkdir -p "${stage}"
+        log "Pulling OCI generic pack from $ref"
+        # mc-image-helper resolves the manifest, downloads each layer (with
+        # digest verification and layer-level dedup against $stage), and
+        # writes the resulting tarball paths in apply order to a list
+        # file we then mapfile back in. The list file is used rather than
+        # stdout because mc-image-helper INFO logs share that stream.
+        layerList=$(mktemp)
+        if ! mc-image-helper install-oci-pack \
+            --ref "${ref}" \
+            --output-directory "${stage}" \
+            --layer-list-file "${layerList}"; then
+          rm -f "${layerList}"
+          logError "Failed to install OCI generic pack ${ref}"
+          exit 2
+        fi
+        mapfile -t ociLayers < "${layerList}"
+        rm -f "${layerList}"
+        if [ ${#ociLayers[@]} -eq 0 ]; then
+          logError "OCI generic pack ${ref} resolved to zero layers"
+          exit 2
+        fi
+        packFiles+=("${ociLayers[@]}")
+      elif isURL "${pack}"; then
         mkdir -p /data/packs
         log "Downloading generic pack from $pack"
         if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then

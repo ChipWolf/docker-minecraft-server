@@ -156,6 +156,25 @@ Disabling mods within docker compose files:
         mod2.jar
 ```
 
+### OCI artifact references
+
+`GENERIC_PACK` and `GENERIC_PACKS` also accept references to [OCI artifacts](https://github.com/opencontainers/image-spec/blob/main/manifest.md) using the `oci://` scheme. Each layer of the artifact is treated as a generic pack tarball (`tar+gzip` or `zip`) and applied in manifest layer order, so a producer can put shared content in a base layer and per-pack additions in an overlay layer; the registry then deduplicates the shared layer across every artifact that references it, and a consumer that pulls multiple sibling packs only downloads the shared layer once.
+
+```shell
+docker run -d \
+  -e GENERIC_PACKS=oci://ghcr.io/example/modpacks/tech:v1.0.0 ...
+```
+
+The reference accepts a tag (`oci://ghcr.io/example/pack:v1`) or a digest (`oci://ghcr.io/example/pack@sha256:...`). Authentication, where required, is read from `~/.docker/config.json`; mount your registry credentials into the container if the artifact is private:
+
+```yaml
+      GENERIC_PACKS: oci://ghcr.io/example/modpacks/tech:v1.0.0
+    volumes:
+      - ~/.docker/config.json:/root/.docker/config.json:ro
+```
+
+All other `GENERIC_PACK*` knobs (`SKIP_GENERIC_PACK_UPDATE_CHECK`, `FORCE_GENERIC_PACK_UPDATE`, `GENERIC_PACKS_DISABLE_MODS`, env-var interpolation, etc.) work unchanged because each pulled layer is handed off to the same extraction path used for HTTP- or path-supplied packs.
+
 ## Mods/plugins list
 
 You may also download or copy over individual mods/plugins using the `MODS` or `PLUGINS` environment variables. Both are a comma or newline delimited list of
