@@ -16,9 +16,6 @@ services:
     volumes:
       - ./data:/data
       - ./fake.jar:/servers/fake.jar
-      # While the matching mc-image-helper release is unpublished, point
-      # MC_HELPER_LOCAL at the local build's `install/mc-image-helper`
-      # directory so this test exercises the install-oci-pack subcommand.
-      # require.sh skips this test when the variable is unset, which is
-      # the appropriate behaviour for upstream CI runs.
+      # Bind a local mc-image-helper install (see generic-packs-oci/require.sh).
+      # require.sh skips this test when MC_HELPER_LOCAL is unset (upstream CI).
       - ${MC_HELPER_LOCAL}:/usr/share/mc-image-helper:ro

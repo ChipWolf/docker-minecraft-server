@@ -56,7 +56,9 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
 
 # renovate: datasource=github-releases packageName=itzg/mc-image-helper versioning=loose
 ARG MC_HELPER_VERSION=1.56.3
-ARG MC_HELPER_BASE_URL=${GITHUB_BASEURL}/itzg/mc-image-helper/releases/download/${MC_HELPER_VERSION}
+# owner/repo for GitHub release assets (override for fork builds, e.g. ChipWolf/mc-image-helper)
+ARG MC_HELPER_REPO=itzg/mc-image-helper
+ARG MC_HELPER_BASE_URL=${GITHUB_BASEURL}/${MC_HELPER_REPO}/releases/download/${MC_HELPER_VERSION}
 # used for cache busting local copy of mc-image-helper
 ARG MC_HELPER_REV=1
 RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \

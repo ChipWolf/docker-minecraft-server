@@ -65,19 +65,8 @@ function isURL() {
 # A reference to an OCI artifact, e.g.
 #   oci://ghcr.io/owner/pack:v1
 #   oci://ghcr.io/owner/pack@sha256:...
-# The oci:// prefix is stripped before handing the rest to `oras` since
-# oras itself takes bare references.
-function isOCIRef() {
-  local value=$1
-
-  [[ $value =~ ^oci:// ]]
-}
-
-# A reference to an OCI artifact, e.g.
-#   oci://ghcr.io/owner/pack:v1
-#   oci://ghcr.io/owner/pack@sha256:...
-# The oci:// prefix is stripped before handing the rest to `oras` since
-# oras itself takes bare references.
+# The oci:// prefix is stripped before passing the bare reference to
+# mc-image-helper install-oci-pack.
 function isOCIRef() {
   local value=$1
 
